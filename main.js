@@ -13,8 +13,18 @@ let addButton = document.getElementById('add-button');
 let taskList = [];
 let filterList = [];
 let tabs = document.querySelectorAll('.task-tabs div');
-let mode = '';
+let mode = 'all';
 addButton.addEventListener('click', addTask);
+taskInput.addEventListener('focusin', function () {
+    taskInput.value = '';
+});
+taskInput.addEventListener('keypress', function (event) {
+    if (taskInput.value != '') {
+        if (event.key === 'Enter') {
+            addButton.click();
+        }
+    }
+});
 
 for (let i = 1; i < tabs.length; i++) {
     tabs[i].addEventListener('click', function (event) {
@@ -22,43 +32,46 @@ for (let i = 1; i < tabs.length; i++) {
     });
 }
 
-function addTask() {
+function addTask() {        
+    let taskValue = taskInput.value;
     let task = {
         id: randomIDGenerate(),
-        taskContent: taskInput.value,
+        taskContent: taskValue,
         isComplete: false,
     }
     taskList.push(task);
+    taskInput.value = '';    
     // let taskContent = taskInput.value;
     // taskList.push(taskContent);   90 
     render();
 }
+
 function render() {
+    let resultHTML = '';
     let list = [];
     if (mode == 'all') {
         list = taskList;
-    } else if (mode == 'ongoing') {
+    } else {
         list = filterList;
     }
 
-    let resultHTML = '';
     for (let i = 0; i < list.length; i++) {
-        if (list[i].isComplete == true) {
+        if (list[i].isComplete) {
             resultHTML += 
-            `<div class="task">
-            <div class="task-done">${list[i].taskContent}</div>
-            <div>
-                <button onclick="toggleComplete('${list[i].id}')">Check</button>
-                <button onclick="deleteTask('${list[i].id}')">Delete</button>
+            `<div class="task task-done" id="${list[i].id}">
+            <span>${list[i].taskContent}</span>
+            <div class="button-box">
+                <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-rotate-left"></i></button>
+                <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash-can"></i></button>
             </div>
             </div>`
         } else {
             resultHTML += 
-            `<div class="task">
-            <div>${list[i].taskContent}</div>
-            <div>
-                <button onclick="toggleComplete('${list[i].id}')">Check</button>
-                <button onclick="deleteTask('${list[i].id}')">Delete</button>
+            `<div class="task" id=""${list[i].id}">
+            <span>${list[i].taskContent}</span>
+            <div class="button-box">
+                <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-check"></i></button>
+                <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash-can"></i></button>
             </div>
             </div>`
         }
@@ -77,39 +90,45 @@ function render() {
 */
 function toggleComplete(id) {
     for (let i = 0; i < taskList.length; i ++) {
-        if (taskList[i].id == id) {
+        if (taskList[i].id === id) {
             taskList[i].isComplete = !taskList[i].isComplete;
             break;
         }
-    }
-    render();
-    console.log(taskList);
+    }    
+    filter();
 }
 function deleteTask(id) {
     for (let i = 0; i < taskList.length; i++) {
-        if (taskList[i].id == id) {
-            taskList.splice(i, 1);
-            break;
+        if (taskList[i].id === id) {            
+            taskList.splice(i, 1);                        
         }
-    }
-    render();
-    console.log(taskList);
+    };   
+    filter();        
 }
 function filter(event) {
-    mode = event.target.id;
-    filterList = [];
+    if (event) {
+        mode = event.target.id;
+        document.getElementById('under-line').style.width = event.target.offsetWidth + 'px';
+        document.getElementById('under-line').style.top = '52px';
+        document.getElementById('under-line').style.left = event.target.offsetLeft + 'px';
+    }    
     // console.log('체크', event.target)
-    if (mode == 'all') {
-        render();
-    } else if (mode == 'ongoing') {
+    // 클릭한 타겟의 너비, 레프트
+    filterList = [];    
+    if (mode === 'ongoing') {
         for (let i = 0; i < taskList.length; i++) {
             if (taskList[i].isComplete == false) {
                 filterList.push(taskList[i]);
             }
         }        
-        render();
-    }
-    console.log(filterList)
+    } else if (mode === 'done') {
+        for (let i = 0; i < taskList.length; i++) {
+            if (taskList[i].isComplete == true) {
+                filterList.push(taskList[i]);
+            }
+        }    
+    }    
+    render();
 }
 function randomIDGenerate() {
     return Math.random().toString(36).substr(2, 16);
