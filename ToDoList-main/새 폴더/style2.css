@@ -1,0 +1,76 @@
+@charset 'utf-8';
+
+body {
+    margin: 0;
+    background-image: url(../ToDoList-main/img/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.container {
+    background-color: #fff;
+    min-height: 100vh;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.task-area {
+    border: 1px solid lightgray;
+}
+.task-tabs {
+    position: relative;
+    display: flex;
+    border-bottom: 1px solid lightgray;
+}
+.task-tabs div {
+    padding: 1em;
+}
+#under-line {
+    position: absolute;
+    top: 52px;
+    left: 0;
+    width: 69px;
+    height: 4px;
+    padding: 0;
+    background-color: pink;
+}
+.task-tabs > div {
+    cursor: pointer;
+}
+.task {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid lightgrey;
+}
+.task-done {
+    text-decoration: line-through;
+    background-color: lightgray;
+    transition: 1s;
+}
+.button-box {
+    display: flex;
+}
+.button-box button {
+    height: 100%;
+    border: none;
+    width: 5em;
+    margin: 0;
+    background-color: #fff;
+    transition: 1s;
+    font-size: 25px;
+}
+.button-box button:first-child:hover {
+    background-color: greenyellow;
+}
+.button-box button:nth-child(2):hover {
+    background-color: rgba(255, 0, 0, 0.3);
+}
+.fa-circle-check {
+    color: lightskyblue;
+}
+.fa-rotate-left {
+    color: lightslategray;
+}
+.fa-delete-left {
+    color: lightslategray;
+}
+.task span {
+    padding: 1em;
+}
